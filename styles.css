@@ -20,6 +20,8 @@
     background-color: rgb(105, 130, 75);
     font-family: 'Calculator', sans-serif;
     padding: 10px;
+    text-align: right;
+    text-overflow: initial;
 }
 
 #buttons{
@@ -38,7 +40,7 @@ button {
     background-color: rgb(56, 64, 98);
 }
 
-.operand {
+.operator {
     background-color: rgb(112, 42, 42);
 }
 
