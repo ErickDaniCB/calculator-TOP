@@ -95,7 +95,20 @@ equals.addEventListener('click', () => {
 
 
 undo.addEventListener('click', () => {
-    // typeof(operation.textContent.slice(0,this.length)
+    console.log(`\nClicked: Undo`)
+    let arrUn = Array.from(String(operation.textContent), String);
+    if(numTemp.length){
+        if (arrUn[arrUn.length-1] === numTemp[numTemp.length-1]){
+            numTemp.pop();
+            operation.textContent = operation.textContent.slice(0,this.length-1);
+        }
+    } 
+    else {
+        sign = undefined;
+        operation.textContent = operation.textContent.slice(0,this.length-1);
+        numTemp = Array.from(String(arrOperation), String);
+        arrOperation = [];
+    }
     logs();
 });
 
