@@ -1,5 +1,6 @@
 const digit = document.querySelectorAll('.digit');
 const numbers = document.querySelectorAll('.number');
+const dot = document.getElementById('dot');
 const operation = document.querySelector('#disOperation');
 const disAns = document.querySelector('#disAns');
 const clear = document.querySelector('#clear');
@@ -16,55 +17,80 @@ const operations = {
 
 let numTemp = [];
 let arrOperation = [];
-let operatorDig;
+let sign;
 let ans;
 
 digit.forEach(button => button.addEventListener('click', () => {
+    console.log(`\nClicked`, button.value);
     if(button.classList[1] === 'number'){
-        if(operatorDig === undefined && ans !== undefined){
+        if(sign === undefined && ans !== undefined && numTemp.length === 0){
             operation.textContent = '';
             numTemp = [];
         }
         numTemp.push(button.value);
         operation.textContent += button.value;
+        logs();
     } 
-    else if (numTemp.length !== 0){
-        arrOperation.push(numTemp.join('')/1);
-        numTemp = [];
-        if (arrOperation.length === 2){
-            ans = operations[operatorDig](arrOperation[0],arrOperation[1]);
-            arrOperation.push(ans);
-            disAns.textContent = arrOperation[2];
-            arrOperation.splice(0,2);
-        }  
-        operatorDig = button.value;
-        operation.textContent += button.value;
+    else {
+        if (numTemp.length !== 0){
+            arrOperation.push(numTemp.join('')/1);
+            numTemp = [];
+            if (arrOperation.length === 2){
+                ans = operations[sign](arrOperation[0],arrOperation[1]);
+                arrOperation.push(ans);
+                disAns.textContent = arrOperation[2];
+                arrOperation.splice(0,2);
+            }  
+            sign = button.value;
+            operation.textContent += button.value;
+            logs();
+        } 
+        else if(ans !== undefined){
+            numTemp = Array.from(String(ans), String);
+            arrOperation.push(numTemp.join('')/1);
+            numTemp = [];
+            operation.textContent = ans + button.value;
+            sign = button.value;
+        }
+    }
+}));
+
+dot.addEventListener('click', () => {
+    console.log(`\nClicked`, dot.value);
+    if(sign === undefined && numTemp.length === 0){
+        numTemp.push('0', dot.value);
+        operation.textContent = `0${dot.value}`;
+    }
+    else if (numTemp.includes('.') === false) {
+            numTemp.push(dot.value);
+            operation.textContent += dot.value;
     }
     logs();
-}));
+});
 
 clear.addEventListener('click', () => {
     numTemp = [];
-    operatorDig = undefined;
+    sign = undefined;
     arrOperation = [];
     operation.textContent = '';
     ans = undefined;
     disAns.textContent = '';
-    logs();
+    console.clear();
 });
 
 equals.addEventListener('click', () => {
-    if(operatorDig !== undefined && arrOperation.length === 1){
+    console.log(`\nClicked`, equals.value);
+    if(sign !== undefined && arrOperation.length === 1 && numTemp.length !== 0){
         arrOperation.push(numTemp.join('')/1);
         numTemp = [];
-        ans = operations[operatorDig](arrOperation[0],arrOperation[1]);
+        ans = operations[sign](arrOperation[0],arrOperation[1]);
         arrOperation.push(ans);
         disAns.textContent = arrOperation[2];
-        numTemp = Array.from(String(arrOperation[2]), String);
+        // numTemp = Array.from(String(arrOperation[2]), String);
         arrOperation.splice(0,3);
+        sign = undefined;
+        logs();
     }
-    operatorDig = undefined;
-    logs();
 });
 
 
@@ -74,23 +100,21 @@ undo.addEventListener('click', () => {
 });
 
 answer.addEventListener('click', () => {
-    if(ans !== undefined && numTemp.length === 0){
+    console.log(`\nClicked: asn`);
+    if(numTemp.length === 0 && ans !== undefined){
+        if(sign === undefined){
+            operation.textContent = '';
+        }
         numTemp = Array.from(String(ans), String);
         operation.textContent += ans;
+        logs();
     } 
-    else {
-        operation.textContent = '';
-        numTemp = [ans];
-        operation.textContent = ans;
-    }
-    logs();
 });
 
 
 function logs(){
-    console.clear();
-    console.log(`\nNumTemp`,numTemp);
-    console.log(`Signo`,operatorDig);
+    console.log(`NumTemp`,numTemp);
+    console.log(`Signo`,sign);
     console.log(`Operando`, arrOperation);
     console.log('ans',ans);
 };

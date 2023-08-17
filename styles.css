@@ -57,7 +57,7 @@ button{
     padding: 5px;
 }
 
-.number {
+.number,#dot {
     background-color: rgb(56, 64, 98);
 }
 
